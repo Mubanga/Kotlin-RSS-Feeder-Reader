@@ -29,6 +29,57 @@ class ParseXMLApplications {
             var isInEntryTag = false
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 val currentTagName = xmlPullParser.name.toLowerCase()
+                 when(eventType)
+                 {
+                     XmlPullParser.START_TAG -> {
+                         Log.d(TAG,"Parse: Starting Tag = $currentTagName")
+                         if(currentTagName == "entry")
+                         {
+                             isInEntryTag = true
+                         }
+                     }
+
+                     XmlPullParser.TEXT -> textValue = xmlPullParser.text
+
+                     XmlPullParser.END_TAG -> {
+                         Log.d(TAG,"Parse: Ending Tag = $currentTagName")
+                         if(isInEntryTag)
+                         {
+                             when(currentTagName)
+                             {
+                                 "entry" -> {
+                                     _FeedEntries.add(currentRecord)
+                                     isInEntryTag = false
+                                     currentRecord = FeedEntry()
+                                 }
+                                 // <im:name>The Git Up</im:name>
+                                 "name" ->  currentRecord.Title = textValue
+                                 // <title>The Git Up - Blanco Brown</title>
+                                 "artist" -> currentRecord.Artist = textValue
+                                 // <im:image height="170">https://....png</im:image>
+                                 "image" -> {
+                                   var ImageURI =  xmlPullParser.getAttributeValue(170)
+                                    Log.d(TAG,"Image URI = ${ImageURI?.toString()}")
+                                     currentRecord.Image = textValue
+                                 }
+                                 // <im:releaseDate label="May 3, 2019">2019-05-03T00:00:00-07:00</im:releaseDate>
+                                 "releasedate" -> currentRecord.PublicationDate = textValue
+                                 // <id im:id="1461880347">https:// </id>
+                                 "id" -> currentRecord.PageURL = textValue
+
+                             }
+
+                         }
+
+                     }
+                 }
+                // Proceed To The Next XML Tag
+                eventType = xmlPullParser.next()
+            }
+            for(x in _FeedEntries)
+            {
+                Log.d(TAG,"**********************************")
+                Log.d(TAG,"${x.toString()}")
             }
 
         } catch (e: Exception) {

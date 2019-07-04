@@ -4,8 +4,8 @@ class FeedEntry
 {
 
     var Title:String =""
+    var Artist:String = ""
     var  Image:String = ""
-    var Summary:String = ""
     var PageURL:String = ""
     var PublicationDate:String = ""
 
@@ -13,8 +13,8 @@ class FeedEntry
         var Nyolz:String = ""
         return """
             Title: $Title
+            Artist: $Artist
             ImageURL: $Image
-            Summary: $Summary
             PageURL: $PageURL
             PublicationDate: $PublicationDate
             """.trimIndent()
