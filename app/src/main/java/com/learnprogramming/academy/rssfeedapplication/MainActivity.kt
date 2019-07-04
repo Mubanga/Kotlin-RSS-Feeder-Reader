@@ -9,4 +9,5 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
+    // Niggaz talking ish but they can't say nothing I bee's in the trap
 }
