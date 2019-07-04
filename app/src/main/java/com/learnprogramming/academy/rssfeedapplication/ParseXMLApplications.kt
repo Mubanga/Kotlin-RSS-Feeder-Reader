@@ -29,7 +29,7 @@ class ParseXMLApplications{
             var isInEntryTag = false
             while (eventType != XmlPullParser.END_DOCUMENT) {
                // Log.d(TAG,"$TAG: XML Pull Parser Name: ${xmlPullParser.name.toLowerCase()}")
-                var currentTagName = xmlPullParser.name.toLowerCase()
+                var currentTagName = xmlPullParser.name?.toLowerCase()
                  when(eventType)
                  {
                      XmlPullParser.START_TAG -> {
