@@ -59,9 +59,9 @@ class XMLDataReader (urlFeedPath: String, ReaderBufferSize: Int) {
             val Response_Code = Active_Connection.responseCode
             Log.d(TAG,"$TAG: Server Response Code = ${Response_Code}")
             _Buffered_RSS_Reader = BufferedReader(InputStreamReader(Active_Connection.inputStream))
-            //      Active_Connection.inputStream.buffered().reader().use { _XMLFeedData.append(it.readText())}
-            //      Active_Connection.inputStream.buffered(_ReaderBufferSize).reader().use { _XMLFeedData.append(it.readText()) }
-            ReadBufferedData() // TODO: There Is A Idiomatic Kotlin Expression To Read The Data ALL In One So If We Want To Do That We Can Implement That, However It's Not Advisable For Large DATA Sets
+            Active_Connection.inputStream.buffered().reader().use { _XMLFeedData.append(it.readText())}
+            Active_Connection.inputStream.buffered(_ReaderBufferSize).reader().use { _XMLFeedData.append(it.readText()) }
+            //ReadBufferedData() // TODO: There Is A Idiomatic Kotlin Expression To Read The Data ALL In One So If We Want To Do That We Can Implement That, However It's Not Advisable For Large DATA Sets
         }
         catch(e: Exception)
         {

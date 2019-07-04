@@ -4,14 +4,13 @@ import android.util.Log
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 
-class ParseXMLApplications {
+class ParseXMLApplications{
     private val TAG = "ParseXMLApplications"
     val _FeedEntries = ArrayList<FeedEntry>() // Array List Of All The Relevant Feed Entries From The XML
     var isParseSuccessful = true // True By Default Will Be Set To False If An Exception Or No Parsed Data Can Be Read
 
     fun Parse(XMLString: String): Boolean {
         Log.d(TAG, "Parse: Called With XML String = $XMLString")
-        var isInSpecifiedTag = false
         var textValue = ""
 
         try {
@@ -24,11 +23,13 @@ class ParseXMLApplications {
             val xmlPullParser = xmlFactory.newPullParser()
             // The Input From The XML Pull Parser Needs To Be Set As The Input Coming In From The XMLString
             xmlPullParser.setInput(XMLString.reader())
+
             var eventType = xmlPullParser.eventType
             var currentRecord = FeedEntry()
             var isInEntryTag = false
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                val currentTagName = xmlPullParser.name.toLowerCase()
+               // Log.d(TAG,"$TAG: XML Pull Parser Name: ${xmlPullParser.name.toLowerCase()}")
+                var currentTagName = xmlPullParser.name.toLowerCase()
                  when(eventType)
                  {
                      XmlPullParser.START_TAG -> {
@@ -85,7 +86,7 @@ class ParseXMLApplications {
         } catch (e: Exception) {
             e.printStackTrace()
             isParseSuccessful = false
-            Log.d(TAG, "XML Data Could Not Be Parsed Error = $XMLString")
+            Log.d(TAG, "XML Data Could Not Be Parsed Error = ${e.message}")
 
         }
 

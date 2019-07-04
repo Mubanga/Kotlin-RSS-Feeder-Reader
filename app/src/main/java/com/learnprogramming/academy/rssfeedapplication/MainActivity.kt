@@ -18,7 +18,8 @@ enum class XML_DATA_READER_PERMISSIONS(InternalCode: Int){
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
-    private var FEEDURL = "https://itunes.apple.com/us/rss/topsongs/limit=10/xml"
+    private var FEEDURL = "https://rss.itunes.apple.com/api/v1/us/apple-music/top-songs/all/10/explicit.rss"
+    private var FEEDURL_2 = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=25/xml"
     private var _LOCATION_HARDWARE_PERMISSION_GRANTED = false
 
 
@@ -108,10 +109,9 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(TAG, "OnCreate Called")
         val _DownloadData = DownloadData()
-       // AskForPermissions()
-        // if(_LOCATION_HARDWARE_PERMISSION_GRANTED == true) {
+
         _DownloadData.execute(FEEDURL)
-        // }
+
         Log.d(TAG, "OnCreate Finished")
         // Wait Till I Get My Money Right
     }
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
             fun DownloadXML(URLPath: String?): String {
                 var XMLResult = StringBuilder()
 
-                val _XMLDataReader = XMLDataReader(URLPath!!, 500)
+                val _XMLDataReader = XMLDataReader(URLPath!!, 1024)
                 XMLResult = _XMLDataReader.DownloadXMLData()
          //       Log.d(TAG, "$TAG: XML RESULT = $XMLResult")
 
@@ -139,7 +139,9 @@ class MainActivity : AppCompatActivity() {
                 // TODO("not implemented")To change body of created functions use File | Settings | File Templates.
                 Log.d(TAG, "doInBackground Called With Parameter: ${url[0]}")
                 val RSSFeed = DownloadXML(url[0])
+                Log.d(TAG,"$TAG: RSS FEED = $RSSFeed")
                 val _ParseXMLApplications = ParseXMLApplications()
+                _ParseXMLApplications.Parse(RSSFeed)
 //                if(_ParseXMLApplications.Parse(RSSFeed))
 //                {
 //
