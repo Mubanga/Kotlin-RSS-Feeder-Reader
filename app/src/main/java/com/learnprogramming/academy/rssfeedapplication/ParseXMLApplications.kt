@@ -4,13 +4,13 @@ import android.util.Log
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 
-class ParseXMLApplications{
+class ParseXMLApplications {
     private val TAG = "ParseXMLApplications"
     val _FeedEntries = ArrayList<FeedEntry>() // Array List Of All The Relevant Feed Entries From The XML
     var isParseSuccessful = true // True By Default Will Be Set To False If An Exception Or No Parsed Data Can Be Read
-
+    private var _gotCorrectImageSize: Boolean = false
     fun Parse(XMLString: String): Boolean {
-        Log.d(TAG, "Parse: Called With XML String = $XMLString")
+        //  Log.d(TAG, "Parse: Called With XML String = $XMLString")
         var textValue = ""
 
         try {
@@ -28,59 +28,66 @@ class ParseXMLApplications{
             var currentRecord = FeedEntry()
             var isInEntryTag = false
             while (eventType != XmlPullParser.END_DOCUMENT) {
-               // Log.d(TAG,"$TAG: XML Pull Parser Name: ${xmlPullParser.name.toLowerCase()}")
+                // Log.d(TAG,"$TAG: XML Pull Parser Name: ${xmlPullParser.name.toLowerCase()}")
                 var currentTagName = xmlPullParser.name?.toLowerCase()
-                 when(eventType)
-                 {
-                     XmlPullParser.START_TAG -> {
-                         Log.d(TAG,"Parse: Starting Tag = $currentTagName")
-                         if(currentTagName == "entry")
-                         {
-                             isInEntryTag = true
-                         }
-                     }
+                when (eventType) {
+                    XmlPullParser.START_TAG -> {
+                        Log.d(TAG, "Parse: Starting Tag = $currentTagName")
+                        if (currentTagName == "entry") {
+                            isInEntryTag = true
+                        }
+                        if(isInEntryTag && currentTagName == "image")
+                        {
+                            val imageResolution = xmlPullParser.getAttributeValue(null,"height")
+                            if(imageResolution.isNotEmpty())
+                            {
+                                _gotCorrectImageSize = imageResolution == "170"
+                            }
 
-                     XmlPullParser.TEXT -> textValue = xmlPullParser.text
+                        }
+                    }
 
-                     XmlPullParser.END_TAG -> {
-                         Log.d(TAG,"Parse: Ending Tag = $currentTagName")
-                         if(isInEntryTag)
-                         {
-                             when(currentTagName)
-                             {
-                                 "entry" -> {
-                                     _FeedEntries.add(currentRecord)
-                                     isInEntryTag = false
-                                     currentRecord = FeedEntry()
-                                 }
-                                 // <im:name>The Git Up</im:name>
-                                 "name" ->  currentRecord.Title = textValue
-                                 // <title>The Git Up - Blanco Brown</title>
-                                 "artist" -> currentRecord.Artist = textValue
-                                 // <im:image height="170">https://....png</im:image>
-                                 "image" -> {
-                                   var ImageURI =  xmlPullParser.getAttributeValue(170)
-                                    Log.d(TAG,"Image URI = ${ImageURI?.toString()}")
-                                     currentRecord.Image = textValue
-                                 }
-                                 // <im:releaseDate label="May 3, 2019">2019-05-03T00:00:00-07:00</im:releaseDate>
-                                 "releasedate" -> currentRecord.PublicationDate = textValue
-                                 // <id im:id="1461880347">https:// </id>
-                                 "id" -> currentRecord.PageURL = textValue
+                    XmlPullParser.TEXT -> textValue = xmlPullParser.text
 
-                             }
+                    XmlPullParser.END_TAG -> {
+                        Log.d(TAG, "Parse: Ending Tag = $currentTagName")
+                        if (isInEntryTag) {
+                            when (currentTagName) {
+                                "entry" -> {
+                                    _FeedEntries.add(currentRecord)
+                                    isInEntryTag = false
+                                    currentRecord = FeedEntry()
+                                }
+                                // <im:name>The Git Up</im:name>
+                                "name" -> currentRecord.Title = textValue
+                                // <title>The Git Up - Blanco Brown</title>
+                                "artist" -> currentRecord.Artist = textValue
+                                // <im:image height="170">https://....png</im:image>
+                                "image" -> {
+                                    if(_gotCorrectImageSize) {
+                                        val ImageURI = textValue
+                                        Log.d(TAG, "Image URI = ${ImageURI}")
+                                        currentRecord.Image = ImageURI
+                                    }
+                                }
+                                // <im:releaseDate label="May 3, 2019">2019-05-03T00:00:00-07:00</im:releaseDate>
+                                "releasedate" -> currentRecord.PublicationDate = textValue
+                                // <id im:id="1461880347">https:// </id>
+                                "id" -> currentRecord.PageURL = textValue
 
-                         }
+                            }
 
-                     }
-                 }
+                        }
+
+                    }
+                }
                 // Proceed To The Next XML Tag
                 eventType = xmlPullParser.next()
             }
-            for(x in _FeedEntries)
-            {
-                Log.d(TAG,"**********************************")
-                Log.d(TAG,"${x.toString()}")
+ //           Log.d(TAG,"$TAG Feed Entries Count = ${_FeedEntries.count()}")
+            for (x in _FeedEntries) {
+                Log.d(TAG, "**********************************\n")
+                Log.d(TAG, "${x.toString()}")
             }
 
         } catch (e: Exception) {

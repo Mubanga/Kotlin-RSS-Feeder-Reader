@@ -18,8 +18,8 @@ enum class XML_DATA_READER_PERMISSIONS(InternalCode: Int){
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
-    private var FEEDURL = "https://rss.itunes.apple.com/api/v1/us/apple-music/top-songs/all/10/explicit.rss"
-    private var FEEDURL_2 = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=25/xml"
+    private var FEEDURL_2 = "https://rss.itunes.apple.com/api/v1/us/apple-music/top-songs/all/10/explicit.rss"
+    private var FEEDURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=25/xml"
     private var _LOCATION_HARDWARE_PERMISSION_GRANTED = false
 
 
@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
             private val TAG = "DownloadData"
             override fun onPostExecute(result: String?) {
                 super.onPostExecute(result)
-                Log.d(TAG, "OnPostExecute Called With Parameter: ${result}")
+              //  Log.d(TAG, "OnPostExecute Called With Parameter: ${result}")
             }
 
             fun DownloadXML(URLPath: String?): String {
@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                 // TODO("not implemented")To change body of created functions use File | Settings | File Templates.
                 Log.d(TAG, "doInBackground Called With Parameter: ${url[0]}")
                 val RSSFeed = DownloadXML(url[0])
-                Log.d(TAG,"$TAG: RSS FEED = $RSSFeed")
+            //    Log.d(TAG,"$TAG: RSS FEED = $RSSFeed")
                 val _ParseXMLApplications = ParseXMLApplications()
                 _ParseXMLApplications.Parse(RSSFeed)
 //                if(_ParseXMLApplications.Parse(RSSFeed))
