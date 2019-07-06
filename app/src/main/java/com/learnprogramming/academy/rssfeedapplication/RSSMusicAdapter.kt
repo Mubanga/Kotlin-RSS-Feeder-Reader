@@ -22,6 +22,7 @@ class RSSMusicAdapter(private val DataSet : ArrayList<FeedEntry>) : RecyclerView
         var _albumart : ImageView? = null
         var _title: TextView? = null
         var _artist: TextView? = null
+        var _publicationdate: TextView? = null
 
         /**
          *  Here We Are Essentially Specifing or Associating The Various Widgets With Their Specific ID's
@@ -31,6 +32,7 @@ class RSSMusicAdapter(private val DataSet : ArrayList<FeedEntry>) : RecyclerView
             _albumart = itemView?.findViewById(R.id.imgView_listItem_AlbumArt)
             _title = itemView?.findViewById(R.id.txtView_listItem_Title)
             _artist = itemView?.findViewById(R.id.txtView_listItem_Artist)
+            _publicationdate = itemView?.findViewById(R.id.txtView_listItem_PublicationDate)
         }
     }
     /**
@@ -67,6 +69,7 @@ class RSSMusicAdapter(private val DataSet : ArrayList<FeedEntry>) : RecyclerView
         Picasso.get().load(DataSet[position].Image).into(holder._albumart)
         holder._title?.text = DataSet[position].Title
         holder._artist?.text = DataSet[position].Artist
+        holder._publicationdate?.text = DataSet[position].PublicationDate
 
     }
 

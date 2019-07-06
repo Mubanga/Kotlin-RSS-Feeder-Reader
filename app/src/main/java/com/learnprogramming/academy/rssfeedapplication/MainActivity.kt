@@ -34,8 +34,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var _RSSMusicViewManager: RecyclerView.LayoutManager
     protected var _RSSFeedEntries = ArrayList<FeedEntry>()
 
-    private var FEEDURL_2 = "https://rss.itunes.apple.com/api/v1/us/apple-music/top-songs/all/10/explicit.rss"
-    private var FEEDURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=25/xml"
+    private var FEEDURL_1 = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topalbums/limit=50/xml"
+    private var FEEDURL_2 = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=50/xml"
+    private var FEEDURL = "https://rss.itunes.apple.com/api/v1/us/apple-music/coming-soon/all/25/explicit.atom"
     private var _LOCATION_HARDWARE_PERMISSION_GRANTED = false
 
 
@@ -123,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //_RecyclerView = findViewById(R.id.recyclerView_ListMain)
-       // _RSSMusicViewManager = LinearLayoutManager(this)
+        _RSSMusicViewManager = LinearLayoutManager(this)
 
 
         Log.d(MainActivity.TAG, "OnCreate Called")
@@ -137,7 +138,7 @@ class MainActivity : AppCompatActivity() {
 
     /**
      *  I changed DownloadData From A CompanionObject Because Our Implementation Of It In The onCreate
-     *  We Are Making A Concrete Instance Of It, So I See Now Benefit To Having It As Pseudo-Static Class
+     *  We Are Making A Concrete Instance Of It, So I See No Benefit To Having It As Pseudo-Static Class
      */
         internal inner class DownloadData : AsyncTask<String, Void, ArrayList<FeedEntry> >() {
             private val TAG = "DownloadData"
@@ -147,13 +148,13 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG,"onPostExecute Returns Nyols")
                 if (result != null) {
                     _RSSFeedEntries = result
-                    _RSSMusicViewManager = LinearLayoutManager(this@MainActivity)
+                  // _RSSMusicViewManager = LinearLayoutManager(this@MainActivity)
                     _RSSMusicViewAdapter = RSSMusicAdapter(_RSSFeedEntries)
 
                     _RecyclerView = findViewById<RecyclerView>(R.id.recyclerView_ListMain).apply {
                         // use this setting to improve performance if you know that changes
                         // in content do not change the layout size of the RecyclerView
-                        setHasFixedSize(true)
+                       // setHasFixedSize(true)
 
                         // use a linear layout manager
                         layoutManager = _RSSMusicViewManager

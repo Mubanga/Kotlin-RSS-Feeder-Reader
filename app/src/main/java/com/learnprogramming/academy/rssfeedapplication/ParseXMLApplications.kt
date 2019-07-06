@@ -44,10 +44,11 @@ class ParseXMLApplications {
                         }
                         if(isInEntryTag && currentTagName == "image")
                         {
-                            val imageResolution = xmlPullParser.getAttributeValue(null,"height")
-                            if(imageResolution.isNotEmpty())
-                            {
-                                _gotCorrectImageSize = imageResolution == "170"
+                            val imageResolution = xmlPullParser?.getAttributeValue(null,"height")
+                            if (imageResolution != null) {
+                                if(imageResolution.isNotEmpty()) {
+                                    _gotCorrectImageSize = imageResolution == "170"
+                                }
                             }
 
                         }
@@ -74,6 +75,10 @@ class ParseXMLApplications {
                                         val ImageURI = textValue
                                         Log.d(TAG, "Image URI = ${ImageURI}")
                                         currentRecord.Image = ImageURI
+                                    }
+                                    else
+                                    {
+                                        currentRecord.Image = textValue // Take Whatever Image You Can Get
                                     }
                                 }
                                 // <im:releaseDate label="May 3, 2019">2019-05-03T00:00:00-07:00</im:releaseDate>
