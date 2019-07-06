@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.Toast
 
@@ -15,9 +17,23 @@ enum class XML_DATA_READER_PERMISSIONS(InternalCode: Int){
     LOCATION_HARDWARE_PERMISSION_REQUEST(2)
 }
 
+
+
 class MainActivity : AppCompatActivity() {
 
-    private val TAG = "MainActivity"
+    companion object
+    {
+        val TAG = "MainActivity"
+    }
+
+    /**
+     *  Layout Widget Declarations
+     */
+    private lateinit var _RecyclerView: RecyclerView
+    private lateinit var _RSSMusicViewAdapter: RecyclerView.Adapter<*>
+    private lateinit var _RSSMusicViewManager: RecyclerView.LayoutManager
+    protected var _RSSFeedEntries = ArrayList<FeedEntry>()
+
     private var FEEDURL_2 = "https://rss.itunes.apple.com/api/v1/us/apple-music/top-songs/all/10/explicit.rss"
     private var FEEDURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=25/xml"
     private var _LOCATION_HARDWARE_PERMISSION_GRANTED = false
@@ -106,23 +122,51 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        //_RecyclerView = findViewById(R.id.recyclerView_ListMain)
+       // _RSSMusicViewManager = LinearLayoutManager(this)
 
-        Log.d(TAG, "OnCreate Called")
+
+        Log.d(MainActivity.TAG, "OnCreate Called")
         val _DownloadData = DownloadData()
 
         _DownloadData.execute(FEEDURL)
 
-        Log.d(TAG, "OnCreate Finished")
-        // Wait Till I Get My Money Right
+        Log.d(MainActivity.TAG, "OnCreate Finished")
+
     }
 
-    // Companion Objects Are Kotlin's Equivalents To Static
-    companion object {
-        private class DownloadData : AsyncTask<String, Void, String>() {
+    /**
+     *  I changed DownloadData From A CompanionObject Because Our Implementation Of It In The onCreate
+     *  We Are Making A Concrete Instance Of It, So I See Now Benefit To Having It As Pseudo-Static Class
+     */
+        internal inner class DownloadData : AsyncTask<String, Void, ArrayList<FeedEntry> >() {
             private val TAG = "DownloadData"
-            override fun onPostExecute(result: String?) {
+            private var isParseSuccessful = false
+            override fun onPostExecute(result: ArrayList<FeedEntry>?) {
                 super.onPostExecute(result)
-              //  Log.d(TAG, "OnPostExecute Called With Parameter: ${result}")
+                Log.d(TAG,"onPostExecute Returns Nyols")
+                if (result != null) {
+                    _RSSFeedEntries = result
+                    _RSSMusicViewManager = LinearLayoutManager(this@MainActivity)
+                    _RSSMusicViewAdapter = RSSMusicAdapter(_RSSFeedEntries)
+
+                    _RecyclerView = findViewById<RecyclerView>(R.id.recyclerView_ListMain).apply {
+                        // use this setting to improve performance if you know that changes
+                        // in content do not change the layout size of the RecyclerView
+                        setHasFixedSize(true)
+
+                        // use a linear layout manager
+                        layoutManager = _RSSMusicViewManager
+
+                        // specify an viewAdapter (see also next example)
+                        adapter = _RSSMusicViewAdapter
+
+                    }
+
+                }
+
+
+
             }
 
             fun DownloadXML(URLPath: String?): String {
@@ -130,32 +174,27 @@ class MainActivity : AppCompatActivity() {
 
                 val _XMLDataReader = XMLDataReader(URLPath!!, 1024)
                 XMLResult = _XMLDataReader.DownloadXMLData()
-         //       Log.d(TAG, "$TAG: XML RESULT = $XMLResult")
+                //       Log.d(TAG, "$TAG: XML RESULT = $XMLResult")
 
                 return XMLResult.toString()
             }
 
-            override fun doInBackground(vararg url: String?): String? {
-                // TODO("not implemented")To change body of created functions use File | Settings | File Templates.
+            override fun doInBackground(vararg url: String?): ArrayList<FeedEntry> {
+                var ParsedXMLEntries = ArrayList<FeedEntry>()
                 Log.d(TAG, "doInBackground Called With Parameter: ${url[0]}")
                 val RSSFeed = DownloadXML(url[0])
-            //    Log.d(TAG,"$TAG: RSS FEED = $RSSFeed")
+                //    Log.d(TAG,"$TAG: RSS FEED = $RSSFeed")
                 val _ParseXMLApplications = ParseXMLApplications()
-                _ParseXMLApplications.Parse(RSSFeed)
-//                if(_ParseXMLApplications.Parse(RSSFeed))
-//                {
-//
-//                }
-//                else
-//                {
-//                    Log.e(TAG, "doInBackground: Error Downloading XML")
-//                }
-//                if (RSSFeed == "") {
-//                    Log.e(TAG, "doInBackground: Error Downloading XML")
-//                }
-                return RSSFeed
+
+                if(_ParseXMLApplications.Parse(RSSFeed))
+                {
+                    ParsedXMLEntries = _ParseXMLApplications.getParsedData()
+                    isParseSuccessful = true
+                }
+
+                return ParsedXMLEntries
             }
 
         }
-    }
+
 }

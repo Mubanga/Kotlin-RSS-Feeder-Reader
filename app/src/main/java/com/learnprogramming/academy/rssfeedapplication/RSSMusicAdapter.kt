@@ -15,12 +15,18 @@ class RSSMusicAdapter(private val DataSet : ArrayList<FeedEntry>) : RecyclerView
 
     class RSSMusicViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView)
     {
-        // Declaration
+        /**
+         *  Declaration: Here You Declare All The Widgets In Your "recyler_view_item.xml"
+         *  This is because these will form the necessary building blocks for the inflater
+         */
         var _albumart : ImageView? = null
         var _title: TextView? = null
         var _artist: TextView? = null
 
-        // Initialisation
+        /**
+         *  Here We Are Essentially Specifing or Associating The Various Widgets With Their Specific ID's
+         *  In the "recycler_view_item.xml" i.e mytxtView = findViewById(R.id.txtView_listItem)
+         */
         init {
             _albumart = itemView?.findViewById(R.id.imgView_listItem_AlbumArt)
             _title = itemView?.findViewById(R.id.txtView_listItem_Title)
@@ -51,6 +57,9 @@ class RSSMusicAdapter(private val DataSet : ArrayList<FeedEntry>) : RecyclerView
 
     /**
      *  // Replace the contents of a view (invoked by the layout manager)
+     *
+     *  The ViewHolder "holder" Will Have Access To All The Widgets That Were Declared
+     *  And Initialised In the ViewHolder Class.
      */
 
     override fun onBindViewHolder(holder: RSSMusicViewHolder, position: Int) {
