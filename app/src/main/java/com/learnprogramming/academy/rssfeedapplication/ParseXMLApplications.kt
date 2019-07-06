@@ -9,6 +9,12 @@ class ParseXMLApplications {
     val _FeedEntries = ArrayList<FeedEntry>() // Array List Of All The Relevant Feed Entries From The XML
     var isParseSuccessful = true // True By Default Will Be Set To False If An Exception Or No Parsed Data Can Be Read
     private var _gotCorrectImageSize: Boolean = false
+
+    /**
+     *  Parses The XML Data From A Valid XML String
+     *  @param XMLString
+     *  @return True If XML Data is successfully Parsed Or False If XML Data Cannot Be Parsed An Exception Is Also Thrown
+     */
     fun Parse(XMLString: String): Boolean {
         //  Log.d(TAG, "Parse: Called With XML String = $XMLString")
         var textValue = ""
@@ -99,6 +105,15 @@ class ParseXMLApplications {
 
 
         return isParseSuccessful
+    }
+
+    /**
+     *  Returns A List Of The FeedEntries From The RSSFeed
+     *  @return ArrayList<FeedEntry>
+     */
+    fun getParsedData() : ArrayList<FeedEntry>
+    {
+        return _FeedEntries
     }
 
 }
