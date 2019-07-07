@@ -4,4 +4,16 @@
     <item android:title="Top Songs" android:id="@+id/mnu_songs"/>
     <item android:title="Top Albums" android:id="@+id/mnu_albums"/>
     <item android:title="Top Releases" android:id="@+id/mnu_new_releases"/>
+    <group
+            android:id="@+id/mnu_group_display"
+            android:checkableBehavior="single"
+            android:visible="true"
+            android:enabled="true"
+    >
+        <item android:title="Top 10" android:id="@+id/mnu_display_10"
+              android:checked="true"/>
+        <item android:title="Top 25" android:id="@+id/mnu_display_25"/>
+        <item android:title="Top 50" android:id="@+id/mnu_display_50"/>
+        <item android:title="Top 100" android:id="@+id/mnu_display_100"/>
+    </group>
 </menu>
