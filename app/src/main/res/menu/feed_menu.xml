@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:title="Top Songs" android:id="@+id/mnu_songs"/>
+    <item android:title="Top Albums" android:id="@+id/mnu_albums"/>
+    <item android:title="Top Releases" android:id="@+id/mnu_new_releases"/>
 </menu>

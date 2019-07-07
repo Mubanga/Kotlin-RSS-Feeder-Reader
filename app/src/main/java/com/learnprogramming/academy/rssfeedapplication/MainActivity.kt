@@ -10,6 +10,8 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 
 enum class XML_DATA_READER_PERMISSIONS(InternalCode: Int){
@@ -123,6 +125,34 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.feed_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        return when (item?.itemId)
+        {
+            R.id.mnu_songs -> {
+                FEEDURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=100/xml"
+                true
+            }
+            R.id.mnu_albums -> {
+                FEEDURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topalbums/limit=100/xml"
+                true
+            }
+            R.id.mnu_new_releases -> {
+                FEEDURL = "https://rss.itunes.apple.com/api/v1/us/itunes-music/new-music/all/100/explicit.atom"
+                true
+            }
+            else ->{
+                return super.onOptionsItemSelected(item)
+            }
+
+        }
     }
 
     override fun onDestroy() {
