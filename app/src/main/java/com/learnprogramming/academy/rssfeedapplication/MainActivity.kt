@@ -32,11 +32,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var _RecyclerView: RecyclerView
     private lateinit var _RSSMusicViewAdapter: RecyclerView.Adapter<*>
     private lateinit var _RSSMusicViewManager: RecyclerView.LayoutManager
-    protected var _RSSFeedEntries = ArrayList<FeedEntry>()
+    private var _RSSFeedEntries = ArrayList<FeedEntry>()
+    private val _DownloadData by lazy { DownloadData() }
 
-    private var FEEDURL_1 = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topalbums/limit=50/xml"
-    private var FEEDURL_2 = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=50/xml"
-    private var FEEDURL = "https://rss.itunes.apple.com/api/v1/us/apple-music/coming-soon/all/25/explicit.atom"
+
+    /**
+     *  RSS XML URL Feed Declarations
+     */
+    private var FEEDURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topalbums/limit=100/xml"
+    private var FEEDURL_2 = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=75/xml"
+    private var FEEDURL_3 = "https://rss.itunes.apple.com/api/v1/us/itunes-music/new-music/all/75/explicit.atom"
     private var _LOCATION_HARDWARE_PERMISSION_GRANTED = false
 
 
@@ -118,6 +123,11 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _DownloadData.cancel(true)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
